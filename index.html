@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>GPS Brand IP 開發藍圖 · GPS Brand IP Development Roadmap</title>
+<meta name="description" content="GPS Brand IP 開發藍圖 — 7 階段策略方法論。從策略定錨到治理發布的 12-16 週完整流程，每階段標示交付物、常見錯誤、決策關卡。" />
+<style>
+  :root{
+    --turq:#26A7B0;
+    --turq-deep:#1A7A82;
+    --turq-glow:#26A7B033;
+    --copper:#CAC3D2;
+    --black:#0A1A22;
+    --surface:#142934;
+    --surface-2:#1B3540;
+    --hair:#1F3640;
+    --ink:#E8EDEF;
+    --muted:#8FA1AB;
+    --warn:#F08A8A;
+    --gold:#E6B85C;
+    --green:#5DD39E;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--black);color:var(--ink);font-family:"Inter","Helvetica Neue","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;-webkit-font-smoothing:antialiased;line-height:1.6}
+  a{color:var(--turq);text-decoration:none}
+  a:hover{color:var(--copper)}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 28px}
+
+  /* Top bar */
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(10,26,34,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--hair)}
+  .topbar-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;max-width:1200px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.18em;color:var(--copper);text-transform:uppercase}
+  .brand-mark{width:6px;height:18px;background:var(--turq);display:inline-block}
+  .topbar a.back{font-size:13px;color:var(--muted);letter-spacing:.05em}
+  .topbar a.back:hover{color:var(--turq)}
+
+  /* Hero */
+  .hero{position:relative;padding:72px 0 56px;overflow:hidden;border-bottom:1px solid var(--hair)}
+  .hero::before{content:"";position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,var(--turq-glow) 0%,transparent 60%);pointer-events:none}
+  .eyebrow{font-size:11px;letter-spacing:.28em;color:var(--turq);text-transform:uppercase;margin-bottom:18px;font-weight:600}
+  .hero h1{font-family:"Cambria","Georgia","Noto Serif TC",serif;font-weight:700;font-size:48px;line-height:1.08;margin:0 0 14px;letter-spacing:-.01em;max-width:900px}
+  .hero h1 em{font-style:normal;color:var(--turq)}
+  .hero .sub{font-size:16px;color:var(--copper);margin:0 0 14px;max-width:760px}
+  .hero .meta{display:flex;gap:36px;margin-top:36px;flex-wrap:wrap}
+  .hero .meta .stat{display:flex;flex-direction:column;gap:4px}
+  .hero .meta .num{font-family:"Cambria",serif;font-size:32px;color:var(--turq);font-weight:700;line-height:1}
+  .hero .meta .lbl{font-size:11px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+
+  /* Section */
+  .section{padding:72px 0 24px}
+  .section h2{font-family:"Cambria",serif;font-size:28px;font-weight:700;margin:0 0 6px;display:flex;align-items:center;gap:14px}
+  .section h2 .mark{width:6px;height:24px;background:var(--turq);display:inline-block}
+  .section .zh{color:var(--muted);font-size:13px;margin:0 0 32px;padding-left:20px}
+
+  /* Phase timeline */
+  .timeline{position:relative;margin:32px 0 60px;padding:24px 0}
+  .timeline::before{content:"";position:absolute;left:42px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--turq) 0%,var(--turq-deep) 80%,var(--hair) 100%)}
+
+  .stage{position:relative;display:grid;grid-template-columns:84px 1fr;gap:0;margin-bottom:32px}
+  .stage-num{position:relative;display:flex;align-items:flex-start;justify-content:center;padding-top:8px}
+  .stage-num .dot{position:relative;z-index:2;width:42px;height:42px;border-radius:50%;background:var(--surface);border:2px solid var(--turq);color:var(--turq);display:flex;align-items:center;justify-content:center;font-family:"Cambria",serif;font-weight:700;font-size:18px;box-shadow:0 0 24px var(--turq-glow)}
+  .stage:last-child .stage-num .dot{border-color:var(--gold);color:var(--gold);box-shadow:0 0 24px rgba(230,184,92,.3)}
+
+  .stage-card{background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:24px 28px;margin-left:8px;transition:.2s}
+  .stage-card:hover{border-color:var(--turq-deep)}
+  .stage-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px;margin-bottom:6px}
+  .stage-name{font-family:"Cambria",serif;font-size:22px;font-weight:700;color:var(--ink);margin:0;letter-spacing:-.005em}
+  .stage-name em{font-style:normal;color:var(--turq);font-size:14px;font-weight:400;margin-left:10px;letter-spacing:.04em}
+  .stage-week{font-size:11px;color:var(--copper);letter-spacing:.14em;text-transform:uppercase;background:rgba(38,167,176,.1);padding:6px 12px;border-radius:4px;border:1px solid var(--turq-deep);font-weight:600;white-space:nowrap}
+  .stage-purpose{color:var(--copper);font-size:14px;margin:8px 0 14px;font-style:italic}
+  .stage-phase-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--gold);background:rgba(230,184,92,.08);padding:4px 10px;border-radius:3px;border:1px solid rgba(230,184,92,.25);margin-bottom:18px;font-weight:600;letter-spacing:.04em}
+  .stage-phase-tag::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold)}
+
+  .stage-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+  .stage-block{padding:14px 16px;background:rgba(38,167,176,.04);border-left:2px solid var(--turq);border-radius:0 6px 6px 0}
+  .stage-block.warn{background:rgba(240,138,138,.05);border-left-color:var(--warn)}
+  .stage-block.gate{background:rgba(230,184,92,.05);border-left-color:var(--gold);grid-column:1 / -1}
+  .stage-block .lbl{font-size:10px;color:var(--turq);letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .stage-block.warn .lbl{color:var(--warn)}
+  .stage-block.gate .lbl{color:var(--gold)}
+  .stage-block ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink);line-height:1.7}
+  .stage-block ul li{margin-bottom:3px}
+  .stage-block p{margin:0;font-size:13.5px;color:var(--ink)}
+
+  /* Phase mapping table */
+  .map-section{padding:48px 0 60px}
+  .map-card{background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:32px;margin-top:24px;overflow-x:auto}
+  .map-table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:780px}
+  .map-table th{text-align:left;padding:12px 14px;color:var(--turq);font-size:11px;letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--hair);font-weight:700}
+  .map-table td{padding:14px;border-bottom:1px solid var(--hair);vertical-align:top}
+  .map-table tr:last-child td{border-bottom:none}
+  .map-table .stage-tag{display:inline-block;background:rgba(38,167,176,.12);color:var(--turq);padding:3px 8px;border-radius:3px;font-size:11px;font-weight:600;margin-right:4px;margin-bottom:4px}
+  .map-table .phase-tag{font-family:"Cambria",serif;font-size:14px;color:var(--gold);font-weight:700}
+  .map-table td.weeks{color:var(--copper);font-size:12px;white-space:nowrap}
+
+  /* Key principles cards */
+  .principles{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:24px}
+  .principle{padding:22px;background:var(--surface);border:1px solid var(--hair);border-radius:12px;border-top:3px solid var(--turq)}
+  .principle h4{margin:0 0 8px;font-family:"Cambria",serif;font-size:16px;color:var(--ink)}
+  .principle p{margin:0;font-size:13px;color:var(--copper);line-height:1.6}
+  .principle .num{font-family:"Cambria",serif;font-size:11px;color:var(--turq);letter-spacing:.18em;font-weight:700;margin-bottom:10px;display:block}
+
+  /* Footer */
+  footer{margin-top:60px;padding:48px 0 60px;border-top:1px solid var(--hair);font-size:12px;color:var(--muted)}
+  footer .row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:20px}
+  footer a{color:var(--turq)}
+
+  /* Responsive */
+  @media (max-width:760px){
+    .hero h1{font-size:32px}
+    .stage{grid-template-columns:48px 1fr}
+    .timeline::before{left:24px}
+    .stage-num .dot{width:32px;height:32px;font-size:14px}
+    .stage-card{padding:18px}
+    .stage-grid{grid-template-columns:1fr}
+    .stage-name{font-size:18px}
+    .map-table{font-size:12px}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><span class="brand-mark"></span>GPS · Brand IP Roadmap</div>
+    <a class="back" href="https://gps-ip-tools-hub.vercel.app">← 返回 GPS Brand IP 工具箱</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Brand IP Development · Strategic Methodology</div>
+    <h1>GPS Brand IP <em>開發藍圖</em></h1>
+    <p class="sub">從策略定錨到治理發布的完整路徑。7 階段方法論明確標示每階段交付物、常見錯誤與決策關卡，並對映至既有 GPS 治理結構的 5 個治理階段。</p>
+    <p class="sub" style="font-size:14px;color:var(--muted)">A 7-stage strategic methodology for Brand IP development, mapped to GPS governance phases.</p>
+
+    <div class="meta">
+      <div class="stat"><span class="num">7</span><span class="lbl">Strategic Stages / 策略階段</span></div>
+      <div class="stat"><span class="num">5</span><span class="lbl">Governance Phases / 治理階段</span></div>
+      <div class="stat"><span class="num">12-16</span><span class="lbl">Weeks / 週數</span></div>
+      <div class="stat"><span class="num">5</span><span class="lbl">Decision Gates / 決策關卡</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- STRATEGIC TIMELINE -->
+<section class="section wrap">
+  <h2><span class="mark"></span>7 階段建置方法論</h2>
+  <p class="zh">Strategic Methodology · 內部品牌變革 IP 開發流程（非消費 IP 模板）</p>
+
+  <div class="timeline">
+
+    <!-- Stage 1 -->
+    <div class="stage">
+      <div class="stage-num"><div class="dot">1</div></div>
+      <div class="stage-card">
+        <div class="stage-head">
+          <h3 class="stage-name">策略定錨 <em>Strategic Anchoring</em></h3>
+          <span class="stage-week">Week 1–2</span>
+        </div>
+        <p class="stage-purpose">這個 IP 要替誰、解決什麼、不能是什麼？</p>
+        <div class="stage-phase-tag">對應 Phase 0 · E1–E4 角色檔案 + E5 視覺生成 SOP 前置</div>
+        <div class="stage-grid">
+          <div class="stage-block">
+            <div class="lbl">交付物 · Deliverables</div>
+            <ul>
+              <li>角色定位陳述 Character Brief（一段話）</li>
+              <li>使用情境矩陣（3 年所有場景）</li>
+              <li>競品掃描（含內部既有熊類角色）</li>
+            </ul>
+          </div>
+          <div class="stage-block warn">
+            <div class="lbl">⚠ 常見錯誤</div>
+            <p>直接跳到「畫」而沒有先寫定位陳述，導致設計師交件後發現方向錯了重畫三輪。</p>
+          </div>
+          <div class="stage-block gate">
+            <div class="lbl">★ 決策關卡 Decision Gate</div>
+            <p>定位陳述若寫不出來，代表前置研究不足 — 不可進入下一階段。本階段為硬性把關，省不得。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 2 -->
+    <div class="stage">
+      <div class="stage-num"><div class="dot">2</div></div>
+      <div class="stage-card">
+        <div class="stage-head">
+          <h3 class="stage-name">原型選擇與在地審查 <em>Candidate Selection & Local Review</em></h3>
+          <span class="stage-week">Week 3–5</span>
+        </div>
+        <p class="stage-purpose">承接 19 個候選圖鑑，從「物種研究」進到「角色可行性」</p>
+        <div class="stage-phase-tag">對應 Phase 0 · 候選評估補入既有 E 系列節點之前</div>
+        <div class="stage-grid">
+          <div class="stage-block">
+            <div class="lbl">交付物 · Deliverables</div>
+            <ul>
+              <li>Top 3 候選 SWOT（剪影測試／情緒承載／跨文化轉譯／商標檢索）</li>
+              <li>在地利害關係人預審紀錄（每候選 1 小時對話）</li>
+              <li>法務初查報告（TIPO / USPTO / EUIPO / JPO / CNIPA）</li>
+            </ul>
+          </div>
+          <div class="stage-block warn">
+            <div class="lbl">⚠ 常見錯誤</div>
+            <p>跳過在地利害關係人對話。後期被否決的成本是前期諮詢的 50 倍。</p>
+          </div>
+          <div class="stage-block gate">
+            <div class="lbl">★ 決策關卡 Decision Gate</div>
+            <p>候選須從 19 縮為 1 個主角 + 1 個備案。Director 與 Section Heads 同意主角後進入下一階段。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 3 -->
+    <div class="stage">
+      <div class="stage-num"><div class="dot">3</div></div>
+      <div class="stage-card">
+        <div class="stage-head">
+          <h3 class="stage-name">敘事框架 <em>Narrative Framework</em></h3>
+          <span class="stage-week">Week 6–7</span>
+        </div>
+        <p class="stage-purpose">內部品牌變革 IP 必做（消費 IP 通常跳過）</p>
+        <div class="stage-phase-tag">對應 Phase 1 · N1 產品決策框架的內容基礎</div>
+        <div class="stage-grid">
+          <div class="stage-block">
+            <div class="lbl">交付物 · Deliverables</div>
+            <ul>
+              <li>角色背景故事（500–800 字，所有衍生內容源頭）</li>
+              <li>聲音與口吻指引（會用什麼字、不用什麼字）</li>
+              <li>三年敘事整合（Y1/Y2/Y3 角色扮演的角色）</li>
+            </ul>
+          </div>
+          <div class="stage-block warn">
+            <div class="lbl">⚠ 常見錯誤</div>
+            <p>把「設定集」當敘事框架。設定集是 What，敘事框架是 Why — 必須回答角色為何出現。</p>
+          </div>
+          <div class="stage-block gate">
+            <div class="lbl">★ 決策關卡 Decision Gate</div>
+            <p>背景故事須與 GPS 三年敘事弧線（Y1 changing how security feels / Y2 becomes who we are / Y3 by design）顯式對齊，否則回到階段 1。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 4 -->
+    <div class="stage">
+      <div class="stage-num"><div class="dot">4</div></div>
+      <div class="stage-card">
+        <div class="stage-head">
+          <h3 class="stage-name">視覺設計 <em>Visual Design</em></h3>
+          <span class="stage-week">Week 8–11</span>
+        </div>
+        <p class="stage-purpose">大家以為的全部，其實只是 1/7</p>
+        <div class="stage-phase-tag">對應 Phase 0 E5 視覺生成 SOP + Phase 1 治理規範整合</div>
+        <div class="stage-grid">
+          <div class="stage-block">
+            <div class="lbl">4.1 概念草圖（W8）</div>
+            <ul>
+              <li>3 種風格各 5–8 張縮圖（寫實／插畫／幾何極簡）</li>
+              <li>剪影測試 24px — 仍能辨認的進下一輪</li>
+            </ul>
+          </div>
+          <div class="stage-block">
+            <div class="lbl">4.2 主視覺定稿（W9）</div>
+            <ul>
+              <li>三視圖（正、3/4、純側）</li>
+              <li>表情圖 8 種（中性／歡迎／思考／提醒／慶祝／關心／警覺／引導）</li>
+              <li>姿態圖 6 種（站／走／招手／指引／坐／伴隨）</li>
+            </ul>
+          </div>
+          <div class="stage-block">
+            <div class="lbl">4.3 設計系統整合（W10–11）</div>
+            <ul>
+              <li>配色鎖定 GPS 既有 Token（Turquoise #26A7B0 / Copper #CAC3D2 / Black #0A1A22）</li>
+              <li>比例規範（頭身比、最小尺寸、安全留白）</li>
+              <li>Brand Bible 31 sections 對應更新</li>
+            </ul>
+          </div>
+          <div class="stage-block warn">
+            <div class="lbl">⚠ 常見錯誤</div>
+            <p>一開始就上色。應先做剪影 + 線稿，定形後再進顏色。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 5 -->
+    <div class="stage">
+      <div class="stage-num"><div class="dot">5</div></div>
+      <div class="stage-card">
+        <div class="stage-head">
+          <h3 class="stage-name">應用測試 <em>Application Testing</em></h3>
+          <span class="stage-week">Week 12–13</span>
+        </div>
+        <p class="stage-purpose">設計做完不等於可用，要在真實場景驗證</p>
+        <div class="stage-phase-tag">對應 Phase 2a · S7 串聯成效儀表板的前置 baseline</div>
+        <div class="stage-grid">
+          <div class="stage-block">
+            <div class="lbl">媒材測試</div>
+            <ul>
+              <li>印刷（A4／海報／名片）</li>
+              <li>螢幕（4K／手機／LINE 貼圖小尺寸）</li>
+              <li>實體（布章／徽章／立體公仔打樣）</li>
+              <li>動態（walk cycle／blink／idle）</li>
+            </ul>
+          </div>
+          <div class="stage-block">
+            <div class="lbl">可用性測試</div>
+            <ul>
+              <li>8–10 位 GPS 同仁（管理師／工程師／主管／行政各層級）</li>
+              <li>剪影識別、情緒辨識、好感度三項</li>
+              <li>跨文化檢驗（JP / DE / AZ / SG 各 1 名）</li>
+            </ul>
+          </div>
+          <div class="stage-block warn">
+            <div class="lbl">⚠ 常見錯誤</div>
+            <p>只在桌機看設計檔。實體周邊（布章繡線、印刷網點、3D 立體）會暴露 2D 設計時看不到的問題。</p>
+          </div>
+          <div class="stage-block gate">
+            <div class="lbl">★ 決策關卡 Decision Gate</div>
+            <p>跨文化測試出現任何單一區域強烈負面反饋，必須回到階段 4 修正。不可「平均分數可接受」就放行。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 6 -->
+    <div class="stage">
+      <div class="stage-num"><div class="dot">6</div></div>
+      <div class="stage-card">
+        <div class="stage-head">
+          <h3 class="stage-name">資產生產 <em>Asset Production</em></h3>
+          <span class="stage-week">Week 14–15</span>
+        </div>
+        <p class="stage-purpose">從單一主視覺到完整資產生態系</p>
+        <div class="stage-phase-tag">對應 Phase 2b · I1 多語言機器人 + Phase 3 周邊商品</div>
+        <div class="stage-grid">
+          <div class="stage-block">
+            <div class="lbl">完整資產包</div>
+            <ul>
+              <li>靜態（PNG / SVG / AI 各尺寸）</li>
+              <li>動態（Lottie / GIF / MP4）</li>
+              <li>3D 模型（如有實體周邊）</li>
+              <li>字體鎖定檔（角色名標準字）</li>
+            </ul>
+          </div>
+          <div class="stage-block">
+            <div class="lbl">使用指引手冊</div>
+            <ul>
+              <li>30–50 頁 Do/Don't 範例</li>
+              <li>最小尺寸／淨空／配色／語氣</li>
+              <li>跨文化版本差異說明</li>
+            </ul>
+          </div>
+          <div class="stage-block">
+            <div class="lbl">模板庫</div>
+            <ul>
+              <li>簡報、信件、名片、社群貼文、新人訓練各 5–10 套</li>
+              <li>對應 Brand Bible 既有 31 sections</li>
+            </ul>
+          </div>
+          <div class="stage-block warn">
+            <div class="lbl">⚠ 常見錯誤</div>
+            <p>把「素材包」當交付終點。沒有使用指引，3 個月內各部門就會自由變形產出怪異版本。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stage 7 -->
+    <div class="stage">
+      <div class="stage-num"><div class="dot">7</div></div>
+      <div class="stage-card">
+        <div class="stage-head">
+          <h3 class="stage-name">治理與發布 <em>Governance & Launch</em></h3>
+          <span class="stage-week">Week 16+ · Ongoing</span>
+        </div>
+        <p class="stage-purpose">發布是起點不是終點 — 治理機制決定 IP 能否走完三年</p>
+        <div class="stage-phase-tag">對應 Phase 4 跨部門合作 + Phase 5 活動串聯 + N4 年度審議</div>
+        <div class="stage-grid">
+          <div class="stage-block">
+            <div class="lbl">發布前 4 週</div>
+            <ul>
+              <li>Director 與 Section Heads 預審（最後可否決機會）</li>
+              <li>分階段發布計劃（內部小範圍 → 全 GPS → 承攬商 → 對外）</li>
+            </ul>
+          </div>
+          <div class="stage-block">
+            <div class="lbl">維護機制（持續）</div>
+            <ul>
+              <li>誰可新增表情/姿態？誰審核？版權歸屬？</li>
+              <li>納入既有 GPS Brand Bible 治理流程</li>
+              <li>年度 IP 審議（對應 N4 既有節點）</li>
+            </ul>
+          </div>
+          <div class="stage-block gate">
+            <div class="lbl">★ 決策關卡 Decision Gate</div>
+            <p>Director 預審若否決 — 在發布前 4 週還來得及修正；發布後再修需付上 10 倍代價。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Phase Mapping -->
+<section class="map-section wrap">
+  <h2 style="font-family:Cambria,serif;font-size:28px;font-weight:700;margin:0 0 6px;display:flex;align-items:center;gap:14px"><span style="width:6px;height:24px;background:var(--turq);display:inline-block"></span>策略階段 ↔ 治理階段對映</h2>
+  <p style="color:var(--muted);font-size:13px;margin:0 0 32px;padding-left:20px">Strategic Stage ↔ Governance Phase Mapping · 7 階段方法論在 GPS 既有治理結構中的對應位置</p>
+
+  <div class="map-card">
+    <table class="map-table">
+      <thead>
+        <tr>
+          <th style="width:18%">策略階段 Strategic Stage</th>
+          <th style="width:14%">時程 Weeks</th>
+          <th style="width:24%">治理階段 Governance Phase</th>
+          <th style="width:44%">關鍵節點對應 Key Node Mapping</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="stage-tag">1</span> 策略定錨</td>
+          <td class="weeks">W1–2</td>
+          <td><span class="phase-tag">Phase 0 — 身份基礎</span></td>
+          <td>Character Brief 對應 E1–E4（角色檔案）；定位陳述為 E5 視覺生成 SOP 的前置依據</td>
+        </tr>
+        <tr>
+          <td><span class="stage-tag">2</span> 候選與在地審查</td>
+          <td class="weeks">W3–5</td>
+          <td><span class="phase-tag">Phase 0 — 身份基礎</span></td>
+          <td>SWOT 與利害關係人預審補入既有 E 系列節點之前；商標檢索對應 N3 跨區域協議的法務基礎</td>
+        </tr>
+        <tr>
+          <td><span class="stage-tag">3</span> 敘事框架</td>
+          <td class="weeks">W6–7</td>
+          <td><span class="phase-tag">Phase 1 — 治理規範</span></td>
+          <td>背景故事 + 聲音指引成為 N1 產品決策框架的內容基礎；對應治理文件第 3 章「品牌整合策略」</td>
+        </tr>
+        <tr>
+          <td><span class="stage-tag">4</span> 視覺設計</td>
+          <td class="weeks">W8–11</td>
+          <td><span class="phase-tag">Phase 0（E5）</span> + <span class="phase-tag">Phase 1</span></td>
+          <td>三視圖／表情／姿態圖鎖入 E5 視覺生成 SOP；長期累積 200+ 張形成基準圖庫</td>
+        </tr>
+        <tr>
+          <td><span class="stage-tag">5</span> 應用測試</td>
+          <td class="weeks">W12–13</td>
+          <td><span class="phase-tag">Phase 2a — 串聯成效</span></td>
+          <td>跨文化測試對應 S7 串聯成效儀表板的前置 baseline；建立 N4 年度 IP 審議的數據基準</td>
+        </tr>
+        <tr>
+          <td><span class="stage-tag">6</span> 資產生產</td>
+          <td class="weeks">W14–15</td>
+          <td><span class="phase-tag">Phase 2b — 海外與周邊</span> + <span class="phase-tag">Phase 3</span></td>
+          <td>多語版本支援 I1 多語言機器人；模板庫支援 S6 活動串聯申請入口；周邊商品對應治理文件第 5 章</td>
+        </tr>
+        <tr>
+          <td><span class="stage-tag">7</span> 治理與發布</td>
+          <td class="weeks">W16+</td>
+          <td><span class="phase-tag">Phase 4 — 跨部門合作</span> + <span class="phase-tag">Phase 5</span></td>
+          <td>對應治理文件第 8/9 章；年度審議納入 N4；維護流程對應既有跨部門合作節點</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Key Principles -->
+<section class="section wrap">
+  <h2><span class="mark"></span>關鍵原則</h2>
+  <p class="zh">Six Principles · 整體流程貫穿的核心紀律</p>
+
+  <div class="principles">
+    <div class="principle">
+      <span class="num">01</span>
+      <h4>內部變革 ≠ 消費 IP</h4>
+      <p>階段 3（敘事框架）與階段 7（治理機制）權重高於外部消費 IP 開發。450 名同仁與 4,000+ 承攬商需要可長期協作的角色，不是促銷吉祥物。</p>
+    </div>
+    <div class="principle">
+      <span class="num">02</span>
+      <h4>剪影優先 · Silhouette First</h4>
+      <p>所有概念必須通過 24px 剪影辨識測試。全球原生物種候選圖鑑工具已用 Pokédex 剪影驗證了 19 個候選的剪影強度。</p>
+    </div>
+    <div class="principle">
+      <span class="num">03</span>
+      <h4>在地審查省不得</h4>
+      <p>後期被否決的成本是前期諮詢的 50 倍。Camas 百合需 Chinookan 部族對話、客家獅需新城社區合作、肥後六花需 JV 四方共識。</p>
+    </div>
+    <div class="principle">
+      <span class="num">04</span>
+      <h4>排除熊類為硬規範</h4>
+      <p>TSMC 已有熊類 IP；含字源熊本（くまモン）、抽象「熊腳印」、薩克森棕熊全部排除。此規範須寫入階段 1 的 Character Brief。</p>
+    </div>
+    <div class="principle">
+      <span class="num">05</span>
+      <h4>三年敘事顯式對齊</h4>
+      <p>Y1「changing how security feels」／Y2「becomes who we are」／Y3「by design」— 角色在每年扮演什麼角色，必須在階段 3 明寫。</p>
+    </div>
+    <div class="principle">
+      <span class="num">06</span>
+      <h4>5 個決策關卡，不可跳過</h4>
+      <p>階段 1, 2, 3, 5, 7 各有硬性決策關卡。任何一關未過不得進入下一階段。壓縮時程會犧牲在地審查與測試 — 後期付出更大代價。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <div>
+        <div style="color:var(--ink);font-weight:600;margin-bottom:8px">GPS Brand IP Development Roadmap v4.1 · 2026 Q2</div>
+        <div>方法論基礎 · 內部品牌變革 IP 開發實務 + GPS 治理九章架構</div>
+        <div style="margin-top:6px">適用範圍 · 任何 GPS 角色／人物 IP 開發專案</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <a href="https://gps-ip-tools-hub.vercel.app">→ GPS Brand IP 工具箱（Hub）</a>
+        <a href="https://gps-species-atlas.vercel.app">→ 全球原生物種候選圖鑑（Atlas）</a>
+      </div>
+    </div>
+    <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--hair);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <span><strong style="color:var(--copper)">GPS Global Physical Security</strong> · Strategy & Transformation</span>
+      <span style="color:var(--muted)">總週期 12–16 週 · 7 策略階段 · 5 決策關卡 · 對映 5 治理階段</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
